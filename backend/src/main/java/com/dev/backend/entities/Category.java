@@ -2,46 +2,26 @@ package com.dev.backend.entities;
 
 import java.time.Instant;
 
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-
-
-@Entity
-@Table(name = "tb_city")
-public class City {
+public class Category {
   
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
   private String name;
   private Instant creatDate;
   private Instant updateDate;
 
+  private Product product;
 
-  @ManyToOne
-  @JoinColumn(name = "state_id")
-  private State state;
-
-  public City(){}
-  public City(Long id, String name, Instant creatDate, Instant updateDate, State state) {
-    this.id = id;
+  public Category(){}
+  public Category(String name, Instant creatDate, Instant updateDate) {
     this.name = name;
     this.creatDate = creatDate;
     this.updateDate = updateDate;
-    this.state = state;
   }
 
   public Long getId() {
     return id;
   }
-
+  
   public void setId(Long id) {
     this.id = id;
   }
@@ -49,7 +29,7 @@ public class City {
   public String getName() {
     return name;
   }
-
+  
   public void setName(String name) {
     this.name = name;
   }
@@ -70,14 +50,12 @@ public class City {
     this.updateDate = updateDate;
   }
 
-  public State getState() {
-    return state;
-  }
   @Override
   public int hashCode() {
     final int prime = 31;
     int result = 1;
     result = prime * result + ((id == null) ? 0 : id.hashCode());
+    result = prime * result + ((name == null) ? 0 : name.hashCode());
     return result;
   }
 
@@ -89,11 +67,16 @@ public class City {
       return false;
     if (getClass() != obj.getClass())
       return false;
-    City other = (City) obj;
+    Category other = (Category) obj;
     if (id == null) {
       if (other.id != null)
         return false;
     } else if (!id.equals(other.id))
+      return false;
+    if (name == null) {
+      if (other.name != null)
+        return false;
+    } else if (!name.equals(other.name))
       return false;
     return true;
   }

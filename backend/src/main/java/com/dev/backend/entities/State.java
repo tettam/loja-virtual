@@ -1,11 +1,14 @@
 package com.dev.backend.entities;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
@@ -26,6 +29,9 @@ public class State {
 
   @Temporal(TemporalType.TIMESTAMP)
   private Instant updateDate;
+
+  @OneToMany(mappedBy = "state")
+  private List<City> city = new ArrayList<>();
 
 
   public State(){}
