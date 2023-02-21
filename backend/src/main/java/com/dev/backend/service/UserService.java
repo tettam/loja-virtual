@@ -6,25 +6,25 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dev.backend.entities.Product;
-import com.dev.backend.repository.ProductRepository;
+import com.dev.backend.entities.User;
+import com.dev.backend.repository.UserRepository;
 
 @Service
-public class ProductService {
-    
-  @Autowired
-  private ProductRepository repository;
+public class UserService {
   
-  public List<Product> findAll(){
+  @Autowired
+  private UserRepository repository; 
+
+  public List<User> findAll(){
     return repository.findAll();
   }
 
-  public Product insert(Product obj){
+  public User insert(User obj){
     obj.setCreatDate(Instant.now());
     return repository.saveAndFlush(obj);
   }
 
-  public Product update(Product obj){
+  public User update(User obj){
     obj.setUpdateDate(Instant.now());
     return repository.saveAndFlush(obj);
   }
@@ -32,5 +32,4 @@ public class ProductService {
   public void delete(Long id){
     repository.deleteById(id);
   }
-
 }

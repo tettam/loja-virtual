@@ -2,15 +2,30 @@ package com.dev.backend.entities;
 
 import java.time.Instant;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "tb_brand")
 public class Brand {
   
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
   private String name;
+
+  @CreationTimestamp
   private Instant creatDate;
+
+  @UpdateTimestamp
   private Instant updateDate;
-
-  private Product product;
-
 
   public Brand(){}
   public Brand(String name, Instant creatDate, Instant updateDate) {

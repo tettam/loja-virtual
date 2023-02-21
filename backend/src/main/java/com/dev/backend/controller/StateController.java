@@ -31,15 +31,15 @@ public class StateController {
   }
 
   @PostMapping
-  public ResponseEntity<State> insert(@RequestBody State state){
-    service.insert(state);
-    return ResponseEntity.ok().body(state);
+  public ResponseEntity<State> insert(@RequestBody State obj){
+    obj = service.insert(obj);
+    return ResponseEntity.ok().body(obj);
   }
 
   @PutMapping
-  public ResponseEntity<State> update(@RequestBody State state){
-    service.update(state);
-    return ResponseEntity.ok().body(state);
+  public ResponseEntity<State> update(@RequestBody State obj){
+    obj = service.update(obj);
+    return ResponseEntity.ok().body(obj);
   }
 
   @DeleteMapping("/{id}")

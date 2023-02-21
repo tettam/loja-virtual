@@ -2,19 +2,43 @@ package com.dev.backend.entities;
 
 import java.time.Instant;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "tb_product")
 public class Product {
   
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String name;
   private String description;
   private Double costPrice;
   private Double salePrice;
+
+  @CreationTimestamp
   private Instant creatDate;
+
+  @UpdateTimestamp
   private Instant updateDate;
 
+
+  @ManyToOne
+  @JoinColumn(name = "brand_id")
   private Brand brand;
+
+  @ManyToOne
+  @JoinColumn(name = "category_id")
   private Category category;
-  private Image image;
 
   public Product(){}
   public Product(Long id, String name, String description, Double costPrice, Double salePrice, Instant creatDate, Instant updateDate) {

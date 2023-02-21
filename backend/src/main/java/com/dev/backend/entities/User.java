@@ -2,18 +2,51 @@ package com.dev.backend.entities;
 
 import java.time.Instant;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.validator.constraints.br.CPF;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
+@Entity
+@Table(name = "tb_user")
 public class User {
   
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
+
+  @NotBlank
+  @Size(min = 2, max = 70)
   private String name;
+
+  @CPF
   private String cpf;
+
+  @Email
   private String email;
+
   private String password;
   private String address;
   private String zipCode;
+
+  @CreationTimestamp
   private Instant creatDate;
+
+  @UpdateTimestamp
   private Instant updateDate;
 
+  @ManyToOne
+  @JoinColumn(name = "city_id")
   private City city;
 
   public User(){}
