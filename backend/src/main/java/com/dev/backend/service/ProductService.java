@@ -4,32 +4,31 @@ import java.time.Instant;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-import com.dev.backend.entities.City;
-import com.dev.backend.repository.CityRepository;
+import com.dev.backend.entities.Product;
+import com.dev.backend.repository.ProductRepository;
 
-@Service
-public class CityService {
-  
+public class ProductService {
+    
   @Autowired
-  private CityRepository repository;  
-
-  public List<City> findAll(){
+  private ProductRepository repository;
+  
+  public List<Product> findAll(){
     return repository.findAll();
   }
 
-  public City insert(City obj){
+  public Product insert(Product obj){
     obj.setCreatDate(Instant.now());
     return repository.saveAndFlush(obj);
   }
 
-  public City update(City obj){
+  public Product update(Product obj){
     obj.setUpdateDate(Instant.now());
     return repository.saveAndFlush(obj);
   }
 
-  public void delete(Long id) {
+  public void delete(Long id){
     repository.deleteById(id);
   }
+
 }

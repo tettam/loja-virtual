@@ -1,31 +1,28 @@
 package com.dev.backend.service;
 
-import java.time.Instant;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dev.backend.entities.State;
-import com.dev.backend.repository.StateRepository;
+import com.dev.backend.entities.Image;
+import com.dev.backend.repository.ImageRepository;
 
 @Service
-public class StateService {
-  
-  @Autowired
-  private StateRepository repository;
+public class ImageService {
 
-  public List<State> findAll(){
+  @Autowired
+  private ImageRepository repository;
+
+  public List<Image> findAll(){
     return repository.findAll();
   }
 
-  public State insert(State obj){
-    obj.setCreatDate(Instant.now());
+  public  Image insert(Image obj){
     return repository.saveAndFlush(obj);
   }
 
-  public State update(State obj){
-    obj.setUpdateDate(Instant.now());
+  public Image update(Image obj){
     return repository.saveAndFlush(obj);
   }
 

@@ -6,30 +6,30 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dev.backend.entities.City;
-import com.dev.backend.repository.CityRepository;
+import com.dev.backend.entities.Brand;
+import com.dev.backend.repository.BrandRepository;
 
 @Service
-public class CityService {
+public class BrandService {
   
   @Autowired
-  private CityRepository repository;  
+  private BrandRepository repository;
 
-  public List<City> findAll(){
+  public List<Brand> findAll(){
     return repository.findAll();
   }
 
-  public City insert(City obj){
+  public  Brand insert(Brand obj){
     obj.setCreatDate(Instant.now());
     return repository.saveAndFlush(obj);
   }
 
-  public City update(City obj){
+  public Brand update(Brand obj){
     obj.setUpdateDate(Instant.now());
     return repository.saveAndFlush(obj);
   }
 
-  public void delete(Long id) {
+  public void delete(Long id){
     repository.deleteById(id);
   }
 }
