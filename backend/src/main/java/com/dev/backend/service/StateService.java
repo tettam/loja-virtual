@@ -32,6 +32,4 @@ public class StateService {
   public void delete(Long id){
     repository.deleteById(id);
   }
-
-
 }
