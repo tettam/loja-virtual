@@ -1,6 +1,8 @@
 package com.dev.backend.entities;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -11,6 +13,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -39,6 +42,9 @@ public class Product {
   @ManyToOne
   @JoinColumn(name = "category_id")
   private Category category;
+
+  @OneToMany(mappedBy = "product")
+  private List<Image> images = new ArrayList<>();
 
   public Product(){}
   public Product(Long id, String name, String description, Double costPrice, Double salePrice, Instant creatDate, Instant updateDate) {
@@ -107,6 +113,27 @@ public class Product {
     this.updateDate = updateDate;
   }
 
+  
+
+  public Brand getBrand() {
+    return brand;
+  }
+  public void setBrand(Brand brand) {
+    this.brand = brand;
+  }
+
+  public Category getCategory() {
+    return category;
+  }
+
+  public void setCategory(Category category) {
+    this.category = category;
+  }
+
+  public List<Image> getImages() {
+    return images;
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -149,6 +176,4 @@ public class Product {
       return false;
     return true;
   }
-
-  
 }
