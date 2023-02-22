@@ -11,13 +11,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.dev.backend.entities.Image;
 import com.dev.backend.service.ImageService;
 
 @RestController
-@RequestMapping("/api/images")
+@RequestMapping(value = "/api/images")
 public class ImageController {
   
   @Autowired
@@ -30,9 +32,9 @@ public class ImageController {
   }
   
   @PostMapping
-  public ResponseEntity<Image> insert(@RequestBody Image obj){
-    obj = service.insert(obj);
-    return ResponseEntity.ok().body(obj);
+  public ResponseEntity<Image> insert(@RequestParam("product_id") Long id, @RequestParam("file") MultipartFile file ){
+    Image image = service.insert(id, file);
+    return ResponseEntity.status(201).body(image);
   }
 
   @PutMapping

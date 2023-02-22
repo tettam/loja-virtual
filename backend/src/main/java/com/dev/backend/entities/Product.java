@@ -43,8 +43,9 @@ public class Product {
   @JoinColumn(name = "category_id")
   private Category category;
 
-  @OneToMany(mappedBy = "product")
-  private List<Image> images = new ArrayList<>();
+  
+  //@OneToMany(mappedBy = "product")
+  //private List<Image> images = new ArrayList<>();
 
   public Product(){}
   public Product(Long id, String name, String description, Double costPrice, Double salePrice, Instant creatDate, Instant updateDate) {
@@ -113,8 +114,6 @@ public class Product {
     this.updateDate = updateDate;
   }
 
-  
-
   public Brand getBrand() {
     return brand;
   }
@@ -130,9 +129,9 @@ public class Product {
     this.category = category;
   }
 
-  public List<Image> getImages() {
-    return images;
-  }
+  //public List<Image> getImages() {
+  //  return images;
+  //}
 
   @Override
   public int hashCode() {

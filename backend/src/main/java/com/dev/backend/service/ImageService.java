@@ -6,7 +6,6 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +30,7 @@ public class ImageService {
     return repository.findAll();
   }
 
-  public Image saveFile(Long id, MultipartFile file){
+  public Image insert(Long id, MultipartFile file){
     Product product = productRepository.findById(id).get();
     Image image = new Image();
 
@@ -42,19 +41,19 @@ public class ImageService {
 
         Path path = Paths.get("/mnt/c/imagens/lojavirtual/" + pathImage);
         Files.write(path, fileContent);
-        image.setName(pathImage);
+        image.setName(pathImage); //Nome da imagem
+
       }
     } catch (IOException e) {
       e.printStackTrace();
     }
-
-    image.setProduct(product);
-    image.setCreatDate(Instant.now());
+    image.setCreatDate(Instant.now()); //Data de criação
+    image.setProduct(product); //Associar ao produto
     image = repository.saveAndFlush(image);
+    productRepository.saveAndFlush(product);
+    
     return image;
   }
-
-  
 
   public Image update(Image obj){
     obj.setUpdateDate(Instant.now());
@@ -63,5 +62,6 @@ public class ImageService {
 
   public void delete(Long id) {
     repository.deleteById(id);
-  } 
+  }
+
 }

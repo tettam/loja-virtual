@@ -18,7 +18,7 @@ import jakarta.persistence.Table;
 public class Image {
   
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @GeneratedValue(strategy = GenerationType.AUTO)
   private Long id;
 
   private String name;
@@ -32,7 +32,6 @@ public class Image {
   @ManyToOne
   @JoinColumn(name = "product_id")
   private Product product;
-
 
   public Image(){}
   public Image(Long id, String name, Instant creatDate, Instant updateDate) {
