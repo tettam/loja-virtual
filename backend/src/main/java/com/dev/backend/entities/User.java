@@ -1,17 +1,21 @@
 package com.dev.backend.entities;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.br.CPF;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -48,6 +52,9 @@ public class User {
   @ManyToOne
   @JoinColumn(name = "city_id")
   private City city;
+
+  @OneToMany(mappedBy = "user", orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.MERGE}) //Remove do banco em sí e do que foi relacionado.
+  private  List<PermissionUser> permissionUser = new ArrayList<>();
 
   public User(){}
   public User(Long id, String name, String cpf, String email, String password, String address, String zipCode,
@@ -135,6 +142,21 @@ public class User {
     this.updateDate = updateDate;
   }
 
+  public City getCity() {
+    return city;
+  }
+
+  public void setCity(City city) {
+    this.city = city;
+  }
+
+  public void setPermissionUser(List<PermissionUser> listPermissionUser) {
+    for (PermissionUser obj : listPermissionUser) {
+      obj.setUser(this);
+    }
+    this.permissionUser = listPermissionUser;
+  }
+
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -170,5 +192,8 @@ public class User {
     } else if (!cpf.equals(other.cpf))
       return false;
     return true;
+  }
+  public List<PermissionUser> getPermissionUser() {
+    return permissionUser;
   }
 }
