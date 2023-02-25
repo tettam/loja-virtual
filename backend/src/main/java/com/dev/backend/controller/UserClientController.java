@@ -9,19 +9,18 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.dev.backend.dto.UserClientRequestDTO;
 import com.dev.backend.entities.User;
-import com.dev.backend.service.UserService;
+import com.dev.backend.service.UserClientService;
 
 @RestController
 @RequestMapping(value = "/api/clients")
 public class UserClientController {
 
   @Autowired
-  private UserService service; 
+  private UserClientService service; 
 
   @PostMapping
   public ResponseEntity<User> insert(@RequestBody UserClientRequestDTO obj){
-    User user = new UserClientRequestDTO().convertUser(obj);
-    user = service.insert(user);
-    return ResponseEntity.ok().body(user);
+    User newUser = service.insert(obj);
+    return ResponseEntity.ok().body(newUser);
   }
 }
