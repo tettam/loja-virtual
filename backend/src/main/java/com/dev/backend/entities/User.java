@@ -38,7 +38,8 @@ public class User {
 
   @Email
   private String email;
-
+  private String codRecoveryPassword;
+  private Instant dataValidatorCod;
   private String password;
   private String address;
   private String zipCode;
@@ -150,12 +151,29 @@ public class User {
     this.city = city;
   }
 
+  public String getCodRecoveryPassword() {
+    return codRecoveryPassword;
+  }
+
+  public void setCodRecoveryPassword(String codRecoveryPassword) {
+    this.codRecoveryPassword = codRecoveryPassword;
+  }
+
+  public Instant getDataValidatorCod() {
+    return dataValidatorCod;
+  }
+  
+  public void setDataValidatorCod(Instant dataValidatorCod) {
+    this.dataValidatorCod = dataValidatorCod;
+  }
+
   public void setPermissionUser(List<PermissionUser> listPermissionUser) {
     for (PermissionUser obj : listPermissionUser) {
       obj.setUser(this);
     }
     this.permissionUser = listPermissionUser;
   }
+
 
   @Override
   public int hashCode() {

@@ -27,8 +27,6 @@ public class UserClientService {
     user.setCreatDate(Instant.now());
     User newUser = repository.saveAndFlush(user); 
     permissionUserService.bindUserPermissionClient(newUser); //Associar as permissões ao User
-
-    
     emailService.sendEmailText(newUser.getEmail(), "Cadastro na Loja Virtual", "Registro na loja foi realizado com sucesso. Em breve você receberá a senha de acesso ao email");
     return newUser;
   }
