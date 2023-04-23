@@ -17,6 +17,8 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -28,25 +30,21 @@ public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
-  @NotBlank
-  @Size(min = 2, max = 70)
+  @NotBlank(message = "O nome do usuário é obrigatório")
+  @Size(min = 2, max = 70, message = "O minímo de 2 caracteres")
   private String name;
-
-  @CPF
+  @CPF(message = "CPF inválido")
   private String cpf;
-
-  @Email
+  @Email(message = "Email inválido")
   private String email;
   private String codRecoveryPassword;
+  @Temporal(TemporalType.TIMESTAMP)
   private Instant dataValidatorCod;
   private String password;
   private String address;
   private String zipCode;
-
   @CreationTimestamp
   private Instant creatDate;
-
   @UpdateTimestamp
   private Instant updateDate;
 
@@ -166,15 +164,15 @@ public class User {
   public void setDataValidatorCod(Instant dataValidatorCod) {
     this.dataValidatorCod = dataValidatorCod;
   }
-
-  public void setPermissionUser(List<PermissionUser> listPermissionUser) {
-    for (PermissionUser obj : listPermissionUser) {
-      obj.setUser(this);
-    }
-    this.permissionUser = listPermissionUser;
+  public List<PermissionUser> getPermissionUser() {
+    return permissionUser;
   }
-
-
+  // public void setPermissionUser(List<PermissionUser> listPermissionUser) {
+  //   for (PermissionUser obj : listPermissionUser) {
+  //     obj.setUser(this);
+  //   }
+  //   this.permissionUser = listPermissionUser;
+  // }
   @Override
   public int hashCode() {
     final int prime = 31;
@@ -211,7 +209,5 @@ public class User {
       return false;
     return true;
   }
-  public List<PermissionUser> getPermissionUser() {
-    return permissionUser;
-  }
+ 
 }

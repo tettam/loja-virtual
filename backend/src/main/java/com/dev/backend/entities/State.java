@@ -22,19 +22,15 @@ public class State {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
   private String name;
   private String acronym;
-
   @CreationTimestamp
   private Instant creatDate;
-
   @UpdateTimestamp
   private Instant updateDate;
 
   @OneToMany(mappedBy = "state")
   private List<City> city = new ArrayList<>();
-
 
   public State(){}
   public State(Long id, String name, String acronym, Instant creatDate, Instant updateDate) {
@@ -139,9 +135,4 @@ public class State {
     return "State [id=" + id + ", name=" + name + ", acronym=" + acronym + ", creatDate=" + creatDate + ", updateDate="
         + updateDate + "]";
   }
-  
-  
-  
-
-  
 }

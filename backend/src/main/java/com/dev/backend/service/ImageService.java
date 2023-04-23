@@ -22,7 +22,6 @@ public class ImageService {
   
   @Autowired
   private ImageRepository repository;
-
   @Autowired
   private ProductRepository productRepository;
 
@@ -42,7 +41,6 @@ public class ImageService {
         Path path = Paths.get("/mnt/c/imagens/lojavirtual/" + pathImage);
         Files.write(path, fileContent);
         image.setName(pathImage); //Nome da imagem
-
       }
     } catch (IOException e) {
       e.printStackTrace();

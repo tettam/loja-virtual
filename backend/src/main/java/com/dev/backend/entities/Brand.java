@@ -18,12 +18,9 @@ public class Brand {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
   private String name;
-
   @CreationTimestamp
   private Instant creatDate;
-
   @UpdateTimestamp
   private Instant updateDate;
 

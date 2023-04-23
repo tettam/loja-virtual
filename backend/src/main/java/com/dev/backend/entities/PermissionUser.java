@@ -22,10 +22,8 @@ public class PermissionUser {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-
   @CreationTimestamp
   private Instant creatDate;
-
   @UpdateTimestamp
   private Instant updateDate;
 

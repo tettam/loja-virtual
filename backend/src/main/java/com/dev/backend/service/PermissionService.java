@@ -32,5 +32,4 @@ public class PermissionService {
   public void delete(Long id){
     repository.deleteById(id);
   }
-
 }

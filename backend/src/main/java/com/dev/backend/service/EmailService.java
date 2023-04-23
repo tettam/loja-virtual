@@ -9,10 +9,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class EmailService{
+
   @Autowired
   private JavaMailSender javaMailSender;
-
-  @Value("$(spring.mail.username)")
+  @Value("${spring.mail.username}")
   private String sender;
     
   public String sendEmailText(String emailClient, String emailTitle, String emailMessage){
@@ -29,6 +29,5 @@ public class EmailService{
     } catch (Exception e) {
         return "Erro ao enviar o email";
     }
-
   }
 }

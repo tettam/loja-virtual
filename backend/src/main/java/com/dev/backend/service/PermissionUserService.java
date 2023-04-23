@@ -16,7 +16,7 @@ import com.dev.backend.repository.PermissionUserRepository;
 public class PermissionUserService {
   
   @Autowired
-  private PermissionUserRepository repository;
+  private PermissionUserRepository permissionUserRepository;
 
   @Autowired
   private PermissionRepository permissionRepository;
@@ -29,7 +29,7 @@ public class PermissionUserService {
       permissionUser.setUser(user);
       permissionUser.setPermission(listPermission.get(0));
       permissionUser.setCreatDate(Instant.now());
-      repository.saveAndFlush(permissionUser);
+      permissionUserRepository.saveAndFlush(permissionUser);
     }
   }
 
