@@ -12,6 +12,7 @@ public class EmailService{
 
   @Autowired
   private JavaMailSender javaMailSender;
+
   @Value("${spring.mail.username}")
   private String sender;
     
@@ -20,7 +21,7 @@ public class EmailService{
     try {
       SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
       simpleMailMessage.setFrom(sender);
-      simpleMailMessage.setTo(emailMessage);
+      simpleMailMessage.setTo(emailClient);
       simpleMailMessage.setSubject(emailTitle);
       simpleMailMessage.setText(emailTitle);
       javaMailSender.send(simpleMailMessage);

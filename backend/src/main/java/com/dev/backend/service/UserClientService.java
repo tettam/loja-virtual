@@ -30,6 +30,4 @@ public class UserClientService {
     emailService.sendEmailText(newUser.getEmail(), "Cadastro na Loja Virtual", "Registro na loja foi realizado com sucesso. Em breve você receberá a senha de acesso ao email");
     return newUser;
   }
-
-  
 }
