@@ -16,6 +16,6 @@ export class StatesService {
   }
 
   delete(id){
-    return axios.delete(this.url+'states'+ id)
+    return axios.delete(this.url+'states/'+ id)
   }
 }

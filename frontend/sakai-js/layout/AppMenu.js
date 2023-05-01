@@ -16,7 +16,12 @@ const AppMenu = () => {
             label: 'Cadastro',
             items: [
                 {label: 'Estados', icon: 'pi pi-fw pi pi-database', to: '/pages/states'},
-                {label: 'Cidades', icon: 'pi pi-fw pi pi-database', to: '/pages/cities'}
+                {label: 'Cidades', icon: 'pi pi-fw pi pi-database', to: '/pages/cities'},
+                {label: 'Usuários', icon: 'pi pi-fw pi pi-database', to: '/pages/users'},
+                {label: 'Marcas', icon: 'pi pi-fw pi pi-database', to: '/pages/brands'},
+                {label: 'Produtos', icon: 'pi pi-fw pi pi-database', to: '/pages/products'},
+                {label: 'Categoria', icon: 'pi pi-fw pi pi-database', to: '/pages/categories'},
+                {label: 'Permissões', icon: 'pi pi-fw pi pi-database', to: '/pages/permissions'},
             ]
         },
         {

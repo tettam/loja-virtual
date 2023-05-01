@@ -1,29 +1,21 @@
 import axios from "axios";
 
 export class CityService {
-  url = 'http://localhost:3000/api/cities'
+  url = 'http://localhost:8080/api/'
 
   findAll(){
-    axios.get(this.url)
-    .then(response => console.log(response.data))
-    .catch(error => console.log(error))
+    return axios.get(this.url+'cities')
   }
 
   insert(object){
-    axios.post(url, object)
-    .then(response => console.log(response.data))
-    .catch(error => console.log(error))
+    return axios.post(this.url+'cities', object)
   }
 
   update(object){
-    axios.put(url, object)
-    .then(response => console.log(response.data))
-    .catch(error => console.log(error))
+    return axios.put(this.url+'cities', object)
   }
 
   delete(id){
-    axios.delete(url, id)
-    .then(response => console.log(response.data))
-    .catch(error => console.log(error))
+    return axios.delete(this.url+'cities/'+ id)
   }
 }

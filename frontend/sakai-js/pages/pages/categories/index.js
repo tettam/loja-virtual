@@ -2,20 +2,20 @@ import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
+import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
-import { CityService } from '../../../demo/service/CityService';
 
-const States = () => {
+const Category = () => {
     let newObject = {
         name: '',
-        acronym: ''
     };
 
     const [objects, setObjects] = useState(null);
+  
     const [objectDialog, setObjectDialog] = useState(false);
     const [deleteObjectDialog, setDeleteObjectDialog] = useState(false);
     const [object, setObject] = useState(newObject);
@@ -23,11 +23,11 @@ const States = () => {
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
-    const objectService = new CityService()
+
 
     useEffect(() => {
         if(objects == null){
-            objectService.states().then(res => {
+            objectService.findAll().then(res => {
                 setObjects(res.data)
             })
         }
@@ -55,12 +55,12 @@ const States = () => {
             let _object = {...object};
             if (object.id) {
                 objectService.update(_object).then(data => {
-                    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Updated', life: 3000 });
+                    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Alterado com sucesso', life: 3000 });
                     setObjects(null)
                 })             
             } else {
                 objectService.insert(_object).then(data => {
-                    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Created', life: 3000 });
+                    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Adicionado com sucesso', life: 3000 });
                     setObjects(null)
                 })
             }
@@ -83,7 +83,7 @@ const States = () => {
     const deleteObject = () => {
 
         objectService.delete(object.id).then(data => {
-            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Product Deleted', life: 3000 });
+            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Cidade deletada', life: 3000 });
             setObjects(null);
             setDeleteObjectDialog(false);
         })
@@ -101,7 +101,7 @@ const States = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="Novo Serviço" icon="pi pi-plus" severity="sucess" className="mr-2" onClick={openNew} />                  
+                    <Button label="Criar cidade" icon="pi pi-plus" severity="sucess" className="mr-2" onClick={openNew} />                  
                 </div>
             </React.Fragment>
         );
@@ -125,16 +125,6 @@ const States = () => {
         );
     };
 
-    const acronymBodyTemplate = (rowData) => {
-        return (
-            <>                                                                                                                                                              
-                <span className="p-column-title">Sigla</span>
-                {rowData.acronym}
-               
-            </>
-        );
-    };
-
     const actionBodyTemplate = (rowData) => {
         return (
             <>
@@ -149,7 +139,7 @@ const States = () => {
             <h5 className="m-0">Manage Products</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
-                <InputText type="search" onChange={(e) => setGlobalFilter(e.target.value)} placeholder="Search..." />
+                <InputText type="search" onChange={(e) => setGlobalFilter(e.target.value)} placeholder="Procurar..." />
             </span>
         </div>
     );
@@ -188,14 +178,14 @@ const States = () => {
                         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
                         currentPageReportTemplate="Showing {first} to {last} of {totalRecords} products"
                         globalFilter={globalFilter}
-                        emptyMessage="Sem objetos cadastrados"
+                        emptyMessage="Não há cadastro"
                         header={header}
                         responsiveLayout="scroll"
                     >
                         
                         <Column field="id" header="Id" sortable body={idBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
-                        <Column field="name" header="name" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
-                        <Column field="acronym" header="acronym" sortable body={acronymBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
+                        <Column field="name" header="Nome" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
+                        <Column field="state" header="Estado" sortable body={stateBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
@@ -203,18 +193,23 @@ const States = () => {
                         <div className="field">
                             <label htmlFor="name">Name</label>
                             <InputText id="name" value={object.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !object.name })} />
-                            {submitted && !object.name && <small className="p-invalid">Name is required.</small>}
+                            {submitted && !object.name && <small className="p-invalid">Nome é necessário</small>}
                         </div>
+                        
 
                         <div className="field">
-                            <label htmlFor="acronym">Sigla</label>
-                            <InputText id="acronym" value={object.acronym} onChange={(e) => onInputChange(e, 'acronym')} required/>
+                            <label htmlFor="name">Estado</label>
+                            <Dropdown value={object.state} onChange={(e) => onInputChange(e, 'state')} options={states} optionLabel="name" 
+                            placeholder="Selecione o estado" className="w-full md:w-14rem" filter />
+
+                            {/* {submitted && !object.name && <small className="p-invalid">É necessário selecionar.</small>} */}
                         </div>
+                        
                     </Dialog>
 
                     <Dialog visible={deleteObjectDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteObjectDialogFooter} onHide={objectDialogFooter}>
                         <div className="flex align-items-center justify-content-center">
-                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '2rem' }} />
+                            <i className="pi pi-exclamation-triangle mr-3" style={{ fontSize: '1rem' }} />
                             {object && <span>Deseja Excluir?</span>}
                         </div>
                     </Dialog>
@@ -224,4 +219,4 @@ const States = () => {
     );
 };
 
-export default States;
+export default Category;
