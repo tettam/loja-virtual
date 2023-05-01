@@ -7,10 +7,10 @@ import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
-import { CategoryService } from '../../../demo/service/CategoryService';
+import { BrandsService } from '../../../demo/service/BrandsService';
 
 
-const Category = () => {
+const Brands = () => {
     let newObject = {
         name: ''
     };
@@ -24,7 +24,7 @@ const Category = () => {
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
-    const objectService = new CategoryService();
+    const objectService = new BrandsService();
 
 
     useEffect(() => {
@@ -85,7 +85,7 @@ const Category = () => {
     const deleteObject = () => {
 
         objectService.delete(object.id).then(data => {
-            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Categoria deletada', life: 3000 });
+            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Marca deletada', life: 3000 });
             setObjects(null);
             setDeleteObjectDialog(false);
         })
@@ -103,7 +103,7 @@ const Category = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="Criar categoria" icon="pi pi-plus" severity="sucess" className="mr-2" onClick={openNew} />                  
+                    <Button label="Criar marca" icon="pi pi-plus" severity="sucess" className="mr-2" onClick={openNew} />                  
                 </div>
             </React.Fragment>
         );
@@ -138,7 +138,7 @@ const Category = () => {
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <h5 className="m-0">Gerenciar categorias</h5>
+            <h5 className="m-0">Gerenciar marcas</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onChange={(e) => setGlobalFilter(e.target.value)} placeholder="Procurar..." />
@@ -210,4 +210,4 @@ const Category = () => {
     );
 };
 
-export default Category;
+export default Brands;

@@ -7,16 +7,24 @@ import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
+import { Dropdown } from 'primereact/dropdown'; 
+import { ProductsService } from '../../../demo/service/ProductsService';
 import { CategoryService } from '../../../demo/service/CategoryService';
+import { BrandsService } from '../../../demo/service/BrandsService';
 
-
-const Category = () => {
+const Products = () => {
     let newObject = {
-        name: ''
+      name: '',
+      description: '',
+      costPrice: '',
+      salePrice: '',
+      brands: '',
+      category: '',
+      images: ''
     };
 
     const [objects, setObjects] = useState(null);
-  
+    const [states, setStates] = useState(null)
     const [objectDialog, setObjectDialog] = useState(false);
     const [deleteObjectDialog, setDeleteObjectDialog] = useState(false);
     const [object, setObject] = useState(newObject);
@@ -24,15 +32,19 @@ const Category = () => {
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
-    const objectService = new CategoryService();
-
+    const objectService = new ProductsService();
+    const categoryService = new CategoryService();
+    const brandService = new BrandsService();
 
     useEffect(() => {
         if(objects == null){
-          objectService.findAll().then(res => {
-                setObjects(res.data)
+            objectService.findAll().then(res => {
+                setObjects(res.data);
             })
         }
+        stateService.states().then(response => {
+            setStates(response.data);
+        })
     }, [objects]);
 
     const openNew = () => {
@@ -85,7 +97,7 @@ const Category = () => {
     const deleteObject = () => {
 
         objectService.delete(object.id).then(data => {
-            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Categoria deletada', life: 3000 });
+            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Produto deletada', life: 3000 });
             setObjects(null);
             setDeleteObjectDialog(false);
         })
@@ -103,7 +115,7 @@ const Category = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="Criar categoria" icon="pi pi-plus" severity="sucess" className="mr-2" onClick={openNew} />                  
+                    <Button label="Criar produto" icon="pi pi-plus" severity="sucess" className="mr-2" onClick={openNew} />                  
                 </div>
             </React.Fragment>
         );
@@ -127,6 +139,15 @@ const Category = () => {
         );
     };
 
+    const stateBodyTemplate = (rowData) => {
+        return (
+            <>
+                <span className='p-column-title'>Estado</span>
+                {rowData.state && (rowData.state.name + '/' + rowData.state.acronym)}
+            </>
+        )
+    }
+
     const actionBodyTemplate = (rowData) => {
         return (
             <>
@@ -138,7 +159,7 @@ const Category = () => {
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <h5 className="m-0">Gerenciar categorias</h5>
+            <h5 className="m-0">Gerenciar produtos</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onChange={(e) => setGlobalFilter(e.target.value)} placeholder="Procurar..." />
@@ -187,6 +208,7 @@ const Category = () => {
                         
                         <Column field="id" header="Id" sortable body={idBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
                         <Column field="name" header="Nome" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
+                        <Column field="state" header="Estado" sortable body={stateBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
@@ -196,6 +218,16 @@ const Category = () => {
                             <InputText id="name" value={object.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !object.name })} />
                             {submitted && !object.name && <small className="p-invalid">Nome é necessário</small>}
                         </div>
+                        
+
+                        <div className="field">
+                            <label htmlFor="name">Estado</label>
+                            <Dropdown value={object.state} onChange={(e) => onInputChange(e, 'state')} options={states} optionLabel="name" 
+                            placeholder="Selecione o estado" className="w-full md:w-14rem" filter />
+
+                            {/* {submitted && !object.name && <small className="p-invalid">É necessário selecionar.</small>} */}
+                        </div>
+                        
                     </Dialog>
 
                     <Dialog visible={deleteObjectDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteObjectDialogFooter} onHide={objectDialogFooter}>
@@ -210,4 +242,4 @@ const Category = () => {
     );
 };
 
-export default Category;
+export default Products;
