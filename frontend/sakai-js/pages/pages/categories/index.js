@@ -2,12 +2,12 @@ import { Button } from 'primereact/button';
 import { Column } from 'primereact/column';
 import { DataTable } from 'primereact/datatable';
 import { Dialog } from 'primereact/dialog';
-import { Dropdown } from 'primereact/dropdown';
 import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import React, { useEffect, useRef, useState } from 'react';
+import { CategoryService } from '../../../demo/service/CategoryService';
 
 const Category = () => {
     let newObject = {
@@ -23,11 +23,12 @@ const Category = () => {
     const [globalFilter, setGlobalFilter] = useState(null);
     const toast = useRef(null);
     const dt = useRef(null);
+    const objectService = new CategoryService();
 
 
     useEffect(() => {
         if(objects == null){
-            objectService.findAll().then(res => {
+          objectService.findAll().then(res => {
                 setObjects(res.data)
             })
         }
@@ -83,7 +84,7 @@ const Category = () => {
     const deleteObject = () => {
 
         objectService.delete(object.id).then(data => {
-            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Cidade deletada', life: 3000 });
+            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Categoria deletada', life: 3000 });
             setObjects(null);
             setDeleteObjectDialog(false);
         })
@@ -101,7 +102,7 @@ const Category = () => {
         return (
             <React.Fragment>
                 <div className="my-2">
-                    <Button label="Criar cidade" icon="pi pi-plus" severity="sucess" className="mr-2" onClick={openNew} />                  
+                    <Button label="Criar categoria" icon="pi pi-plus" severity="sucess" className="mr-2" onClick={openNew} />                  
                 </div>
             </React.Fragment>
         );
@@ -136,7 +137,7 @@ const Category = () => {
 
     const header = (
         <div className="flex flex-column md:flex-row md:justify-content-between md:align-items-center">
-            <h5 className="m-0">Manage Products</h5>
+            <h5 className="m-0">Gerenciar categorias</h5>
             <span className="block mt-2 md:mt-0 p-input-icon-left">
                 <i className="pi pi-search" />
                 <InputText type="search" onChange={(e) => setGlobalFilter(e.target.value)} placeholder="Procurar..." />
@@ -185,7 +186,6 @@ const Category = () => {
                         
                         <Column field="id" header="Id" sortable body={idBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
                         <Column field="name" header="Nome" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
-                        <Column field="state" header="Estado" sortable body={stateBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
@@ -195,16 +195,6 @@ const Category = () => {
                             <InputText id="name" value={object.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !object.name })} />
                             {submitted && !object.name && <small className="p-invalid">Nome é necessário</small>}
                         </div>
-                        
-
-                        <div className="field">
-                            <label htmlFor="name">Estado</label>
-                            <Dropdown value={object.state} onChange={(e) => onInputChange(e, 'state')} options={states} optionLabel="name" 
-                            placeholder="Selecione o estado" className="w-full md:w-14rem" filter />
-
-                            {/* {submitted && !object.name && <small className="p-invalid">É necessário selecionar.</small>} */}
-                        </div>
-                        
                     </Dialog>
 
                     <Dialog visible={deleteObjectDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteObjectDialogFooter} onHide={objectDialogFooter}>
