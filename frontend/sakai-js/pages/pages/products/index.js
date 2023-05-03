@@ -20,9 +20,9 @@ const Products = () => {
       description: '',
       costPrice: '',
       salePrice: '',
-      brand: '',
-      category: '',
-      images: '',
+      brand: null,
+      category: null,
+      images: null,
     };
 
     const [objects, setObjects] = useState(null);
