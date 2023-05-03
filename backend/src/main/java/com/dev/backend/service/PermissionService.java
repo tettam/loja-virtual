@@ -20,6 +20,9 @@ public class PermissionService {
   }
 
   public Permission insert(Permission obj){
+    char firstLetter = obj.getName().charAt(0);
+    String newName = String.valueOf(firstLetter).toUpperCase() + obj.getName().substring(1);
+    obj.setName(newName);
     obj.setCreatDate(Instant.now());
     return obj = repository.saveAndFlush(obj);
   }

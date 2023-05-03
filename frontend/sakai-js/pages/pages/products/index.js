@@ -50,7 +50,6 @@ const Products = () => {
         })
         brandService.findAll().then(response => {
           setBrand(response.data)
-          console.log(object.data)
         })
     }, [objects]);
 
@@ -147,12 +146,12 @@ const Products = () => {
     };
 
     const categoryBodyTemplate = (rowData) => {
-        return (
-          <>
-              <span className='p-column-title'>Categoria</span>
-              {rowData.category && (rowData.category.name)}
-          </>
-        )
+      return (
+        <>
+            <span className='p-column-title'>Categoria</span>
+            {rowData.category && (rowData.category.name)}
+        </>
+      )
     }
 
     const brandBodyTemplate = (rowData) => {
@@ -166,22 +165,20 @@ const Products = () => {
 
     const costPriceBodyTemplate = (rowData) => {
       const value = rowData.costPrice;
-      const valueFormat = value.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})
       return (
         <>
           <span className='p-column-title'></span>
-          {rowData.costPrice && (valueFormat)}
+          {rowData.costPrice && (value.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}))}  
         </>
       )
     }
 
     const salePriceBodyTemplate = (rowData) => {
-      const value = rowData.costPrice;
-      const valueFormat = value.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})
+      const value = rowData.salePrice;
       return (
         <>
           <span className='p-column-title'></span>
-          {rowData.salePrice && (valueFormat)}
+          {rowData.salePrice && (value.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'}))}
         </>
       )
     }

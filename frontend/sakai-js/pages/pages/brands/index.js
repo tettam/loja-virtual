@@ -190,7 +190,7 @@ const Brands = () => {
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={objectDialog} style={{ width: '450px' }} header="Detalhes do Serviço" modal className="p-fluid" footer={objectDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={objectDialog} style={{ width: '450px' }} header="Detalhes da marca" modal className="p-fluid" footer={objectDialogFooter} onHide={hideDialog}>
                         <div className="field">
                             <label htmlFor="name">Name</label>
                             <InputText id="name" value={object.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !object.name })} />

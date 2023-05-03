@@ -20,6 +20,9 @@ public class ProductService {
   }
 
   public Product insert(Product obj){
+    char firstLetter = obj.getName().charAt(0);
+    String newName = String.valueOf(firstLetter).toUpperCase() + obj.getName().substring(1);
+    obj.setName(newName);
     obj.setCreatDate(Instant.now());
     return repository.saveAndFlush(obj);
   }
