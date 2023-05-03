@@ -1,22 +1,9 @@
 import axios from "axios";
+import { ServiceBase } from './ServiceBase';
 
-export class PermissionService {
-
-  url = 'http://localhost:8080/api/permissions'
-
-  findAll(){
-    return axios.get(this.url)
-  }
-
-  insert(object){
-    return axios.post(this.url, object)
-  }
-
-  update(object){
-    return axios.put(this.url, object)
-  }
-
-  delete(id){
-    return axios.delete(this.url + '/' + id)
+export class PermissionService extends ServiceBase {
+  
+  constructor(){
+    super('permissions')
   }
 }

@@ -27,7 +27,7 @@ const States = () => {
 
     useEffect(() => {
         if(objects == null){
-            objectService.states().then(res => {
+            objectService.findAll().then(res => {
                 setObjects(res.data)
             })
         }

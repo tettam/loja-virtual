@@ -35,7 +35,7 @@ const Cities = () => {
                 setObjects(res.data)
             })
         }
-        stateService.states().then(response => {
+        stateService.findAll().then(response => {
             setStates(response.data)
         })
     }, [objects]);

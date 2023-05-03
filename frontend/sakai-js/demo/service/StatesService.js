@@ -1,21 +1,9 @@
 import axios from 'axios';
+import { ServiceBase } from './ServiceBase';
 
-export class StatesService {
-  url = 'http://localhost:8080/api/'
+export class StatesService extends ServiceBase{
 
-  states() {
-    return axios.get(this.url+'states')
-  }
-
-  insert(object){
-    return axios.post(this.url+'states',object)
-  }
-
-  update(object){
-    return axios.put(this.url+'states',object)
-  }
-
-  delete(id){
-    return axios.delete(this.url+'states/'+ id)
+  constructor(){
+    super("states");
   }
 }

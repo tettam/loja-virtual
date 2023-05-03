@@ -1,22 +1,9 @@
 import axios from "axios";
+import { ServiceBase } from './ServiceBase';
 
-export class UserService {
+export class UserService extends ServiceBase {
 
-  url = 'http://localhost:8080/api/users'
-
-  findAll(){
-    return axios.get(this.url)
-  }
-
-  insert(object){
-    return axios.post(this.url, object)
-  }
-
-  update(object){
-    return axios.put(this.url, object)
-  }
-
-  delete(id){
-    return axios.delete(this.url + '/' + id)
+  constructor(){
+    super("users");
   }
 }
