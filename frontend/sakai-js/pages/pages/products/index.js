@@ -6,6 +6,8 @@ import { InputText } from 'primereact/inputtext';
 import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
+import { InputTextarea } from 'primereact/inputtextarea';
+import { InputNumber } from 'primereact/inputnumber';
 import React, { useEffect, useRef, useState } from 'react';
 import { Dropdown } from 'primereact/dropdown'; 
 import { ProductsService } from '../../../demo/service/ProductsService';
@@ -18,13 +20,14 @@ const Products = () => {
       description: '',
       costPrice: '',
       salePrice: '',
-      brands: '',
+      brand: '',
       category: '',
-      images: ''
+      images: '',
     };
 
     const [objects, setObjects] = useState(null);
-    const [states, setStates] = useState(null)
+    const [category , setCategory] = useState(null);
+    const [brand, setBrand] = useState(null)
     const [objectDialog, setObjectDialog] = useState(false);
     const [deleteObjectDialog, setDeleteObjectDialog] = useState(false);
     const [object, setObject] = useState(newObject);
@@ -38,114 +41,158 @@ const Products = () => {
 
     useEffect(() => {
         if(objects == null){
-            objectService.findAll().then(res => {
-                setObjects(res.data);
-            })
+            objectService.findAll().then(response => {
+                setObjects(response.data);
+            })       
         }
-        stateService.states().then(response => {
-            setStates(response.data);
+        categoryService.findAll().then(response => {
+          setCategory(response.data)
+        })
+        brandService.findAll().then(response => {
+          setBrand(response.data)
+          console.log(object.data)
         })
     }, [objects]);
 
     const openNew = () => {
-        setObject(newObject);
-        setSubmitted(false);
-        setObjectDialog(true);
+      setObject(newObject);
+      setSubmitted(false);
+      setObjectDialog(true);
     };
 
     const hideDialog = () => {
-        setSubmitted(false);
-        setObjectDialog(false);
+      setSubmitted(false);
+      setObjectDialog(false);
     };
 
     const hideDeleteObjectDialog = () => {
-        setDeleteObjectDialog(false);
+      setDeleteObjectDialog(false);
     };
 
     const saveObject = () => {
-        setSubmitted(true);
+      setSubmitted(true);
 
-        if (object.name.trim()) {
-            let _object = {...object};
-            if (object.id) {
-                objectService.update(_object).then(data => {
-                    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Alterado com sucesso', life: 3000 });
-                    setObjects(null)
-                })             
-            } else {
-                objectService.insert(_object).then(data => {
-                    toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Adicionado com sucesso', life: 3000 });
-                    setObjects(null)
-                })
-            }
-            setObjectDialog(false)
-            setObject(newObject);
+      if (object.name.trim()) {
+        let _object = {...object};
+        if (object.id) {
+          objectService.update(_object).then(data => {
+              toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Alterado com sucesso', life: 3000 });
+              setObjects(null)
+          })             
+        } else {
+          objectService.insert(_object).then(data => {
+              toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Adicionado com sucesso', life: 3000 });
+              setObjects(null)
+          })
         }
+        setObjectDialog(false)
+        setObject(newObject);
+      }
     };
 
     const editObject = (object) => {
-        setObject({ ...object });
-        setObjectDialog(true);
+      setObject({ ...object });
+      setObjectDialog(true);
     };
 
     const confirmDeleteObject = (object) => {
-        setObject(object);
-        setDeleteObjectDialog(true);
+      setObject(object);
+      setDeleteObjectDialog(true);
         
     };
 
     const deleteObject = () => {
 
-        objectService.delete(object.id).then(data => {
-            toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Produto deletada', life: 3000 });
-            setObjects(null);
-            setDeleteObjectDialog(false);
-        })
+      objectService.delete(object.id).then(data => {
+        toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Produto deletado', life: 3000 });
+        setObjects(null);
+        setDeleteObjectDialog(false);
+      })
     }
 
     const onInputChange = (e, name) => {
-        const val = (e.target && e.target.value) || '';
-        let _object = { ...object };
-        _object[`${name}`] = val;
+      const val = (e.target && e.target.value) || '';
+      let _object = { ...object };
+      _object[`${name}`] = val;
 
-        setObject(_object);
+      setObject(_object);
     };
 
     const leftToolbarTemplate = () => {
         return (
-            <React.Fragment>
-                <div className="my-2">
-                    <Button label="Criar produto" icon="pi pi-plus" severity="sucess" className="mr-2" onClick={openNew} />                  
-                </div>
-            </React.Fragment>
+          <React.Fragment>
+              <div className="my-2">
+                  <Button label="Criar produto" icon="pi pi-plus" severity="sucess" className="mr-2" onClick={openNew} />                  
+              </div>
+          </React.Fragment>
         );
     };
 
     const idBodyTemplate = (rowData) => {
         return (
-            <>
-               <span className="p-column-title">ID</span>
-               {rowData.id}
-            </>
+          <>
+              <span className="p-column-title">ID</span>
+              {rowData.id}
+          </>
         )
     }
 
     const nameBodyTemplate = (rowData) => {
         return (
-            <>
-                <span className="p-column-title">Nome</span>
-                {rowData.name}
-            </>
+          <>
+              <span className="p-column-title">Nome</span>
+              {rowData.name}
+          </>
         );
     };
 
-    const stateBodyTemplate = (rowData) => {
+    const categoryBodyTemplate = (rowData) => {
         return (
-            <>
-                <span className='p-column-title'>Estado</span>
-                {rowData.state && (rowData.state.name + '/' + rowData.state.acronym)}
-            </>
+          <>
+              <span className='p-column-title'>Categoria</span>
+              {rowData.category && (rowData.category.name)}
+          </>
         )
+    }
+
+    const brandBodyTemplate = (rowData) => {
+      return (
+        <>
+            <span className='p-column-title'>Marca</span>
+            {rowData.brand && (rowData.brand.name)}
+        </>
+      )
+    }
+
+    const costPriceBodyTemplate = (rowData) => {
+      const value = rowData.costPrice;
+      const valueFormat = value.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})
+      return (
+        <>
+          <span className='p-column-title'></span>
+          {rowData.costPrice && (valueFormat)}
+        </>
+      )
+    }
+
+    const salePriceBodyTemplate = (rowData) => {
+      const value = rowData.costPrice;
+      const valueFormat = value.toLocaleString('pt-BR', {style: 'currency', currency: 'BRL'})
+      return (
+        <>
+          <span className='p-column-title'></span>
+          {rowData.salePrice && (valueFormat)}
+        </>
+      )
+    }
+
+    const descriptionBodyTemplate = (rowData) => {
+      return (
+        <>
+          <span className='p-column-title'></span>
+          {rowData.description}
+        </>
+      )
     }
 
     const actionBodyTemplate = (rowData) => {
@@ -208,26 +255,49 @@ const Products = () => {
                         
                         <Column field="id" header="Id" sortable body={idBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
                         <Column field="name" header="Nome" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
-                        <Column field="state" header="Estado" sortable body={stateBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
+                        <Column field="costPrice" header="Valor de Compra" sortable body={costPriceBodyTemplate} headerStyle={{ minWidth: '1rem' }} ></Column>
+                        <Column field="salePrice" header="Valor de Venda" sortable body={salePriceBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
+                        <Column field="category" header="Categoria" sortable body={categoryBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
+                        <Column field="brand" header="Marca" sortable body={brandBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
+                        <Column field="description" header="Descrição" sortable body={descriptionBodyTemplate} headerStyle={{ minWidth: '2rem' }}></Column>
                         <Column body={actionBodyTemplate}></Column>
                     </DataTable>
 
-                    <Dialog visible={objectDialog} style={{ width: '450px' }} header="Detalhes do Serviço" modal className="p-fluid" footer={objectDialogFooter} onHide={hideDialog}>
+                    <Dialog visible={objectDialog} style={{ width: '450px' }} header="Detalhes do produto" modal className="p-fluid" footer={objectDialogFooter} onHide={hideDialog}>
                         <div className="field">
-                            <label htmlFor="name">Name</label>
-                            <InputText id="name" value={object.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !object.name })} />
-                            {submitted && !object.name && <small className="p-invalid">Nome é necessário</small>}
+                          <label htmlFor="name">Name</label>
+                          <InputText id="name" value={object.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !object.name })} />
+                          {submitted && !object.name && <small className="p-invalid">Nome é necessário</small>}                 
                         </div>
-                        
 
                         <div className="field">
-                            <label htmlFor="name">Estado</label>
-                            <Dropdown value={object.state} onChange={(e) => onInputChange(e, 'state')} options={states} optionLabel="name" 
-                            placeholder="Selecione o estado" className="w-full md:w-14rem" filter />
-
-                            {/* {submitted && !object.name && <small className="p-invalid">É necessário selecionar.</small>} */}
+                          <label htmlFor="name">Valor de Compra</label>
+                          <InputNumber id='costPrice'  inputId="currency-br" value={object.costPrice} onValueChange={(e) => onInputChange(e, 'costPrice')} mode="currency" currency="BRL" locale="pt-br"/>
                         </div>
-                        
+
+                        <div className="field">
+                          <label htmlFor="name">Valor de Venda</label>
+                          <InputNumber id='salePrice' inputId="currency-br" value={object.salePrice} onValueChange={(e) => onInputChange(e, 'salePrice')} mode="currency" currency="BRL" locale="pt-br"/>
+                        </div>
+
+                        <div className='field'>
+                          <label htmlFor="name">Descrição</label>
+                          <InputTextarea id='description' autoResize value={object.description} onChange={(e) => onInputChange(e, 'description')} rows={3} cols={20} maxLength={100}/>
+                        </div>  
+
+                        <div className="field">
+                          <label htmlFor="name">Categoria</label>
+                          <Dropdown value={object.category} onChange={(e) => onInputChange(e, 'category')} options={category} optionLabel="name" 
+                          placeholder="Selecione a categoria" className="w-full md:w-14rem" filter />
+                          {/* {submitted && !object.name && <small className="p-invalid">É necessário selecionar.</small>} */}
+                        </div>
+
+                        <div className="field">
+                          <label htmlFor="name">Marca</label>
+                          <Dropdown value={object.brand} onChange={(e) => onInputChange(e, 'brand')} options={brand} optionLabel="name" 
+                          placeholder="Selecione a marca" className="w-full md:w-14rem" filter />
+                          {/* {submitted && !object.name && <small className="p-invalid">É necessário selecionar.</small>} */}
+                        </div>                       
                     </Dialog>
 
                     <Dialog visible={deleteObjectDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteObjectDialogFooter} onHide={objectDialogFooter}>
