@@ -269,12 +269,12 @@ const Products = () => {
 
                         <div className="field">
                           <label htmlFor="name">Valor de Compra</label>
-                          <InputNumber id='costPrice'  inputId="currency-br" value={object.costPrice} onValueChange={(e) => onInputChange(e, 'costPrice')} mode="currency" currency="BRL" locale="pt-br"/>
+                          <InputNumber id='costPrice' value={object.costPrice} onValueChange={(e) => onInputChange(e, 'costPrice')} mode="currency" currency="BRL" locale="pt-br"/>
                         </div>
 
                         <div className="field">
                           <label htmlFor="name">Valor de Venda</label>
-                          <InputNumber id='salePrice' inputId="currency-br" value={object.salePrice} onValueChange={(e) => onInputChange(e, 'salePrice')} mode="currency" currency="BRL" locale="pt-br"/>
+                          <InputNumber id='salePrice' value={object.salePrice} mode="currency" currency="BRL" locale="pt-br" onValueChange={(e) => onInputChange(e, 'salePrice')} />
                         </div>
 
                         <div className='field'>

@@ -7,28 +7,26 @@ import { Toast } from 'primereact/toast';
 import { Toolbar } from 'primereact/toolbar';
 import { classNames } from 'primereact/utils';
 import { InputMask } from 'primereact/inputmask';
-import { Password } from 'primereact/password';
 import React, { use, useEffect, useRef, useState } from 'react';
 import { UserService } from '../../../demo/service/UserService';
 import { CityService } from '../../../demo/service/CityService';
 import { ViacepService } from '../../../demo/service/api/ViacepService';
-
+import { useFormik } from 'formik';
 
 const User = () => {
     let newObject = {
-        name: '',
-        cpf:'',
-        password:'',
-        email:'',
-        address:'',
-        zipCode:'',
-        city:null
+      name: '',
+      cpf:'',
+      password:'',
+      email:'',
+      address:'',
+      zipCode:'',
+      city:null
     };
 
     const [objects, setObjects] = useState(null);
     const [ city , setCity] = useState(null)
     const [ error , setError] = useState(true)
-    const [ passwordValid , setPasswordValid] = useState(false)
     const [objectDialog, setObjectDialog] = useState(false);
     const [deleteObjectDialog, setDeleteObjectDialog] = useState(false);
     const [object, setObject] = useState(newObject);
@@ -39,6 +37,31 @@ const User = () => {
     const objectService = new UserService();
     const cityService = new CityService();
     const viaCepService = new ViacepService()
+
+    const formik = useFormik({
+      enableReinitialize:true,
+      initialValues: object,
+      validate: (data) => {
+        const errors = {}
+      
+        if(!data.name) {
+          errors.name = 'Nome é obrigatório'
+        }
+        if(!data.email) {
+          errors.email = 'Email é obrigatório'
+        }
+        else if(!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(data.email)) {    
+          errors.email = 'Email é  inválido'; 
+        }
+
+        return errors;
+      },
+      onSubmit: (data) => {
+        setObject(data)
+        saveObject(),
+        formik.resetForm()
+      }
+    })
 
     useEffect(() => {
         if(objects == null){
@@ -70,7 +93,7 @@ const User = () => {
         setSubmitted(true);
 
         if (object.name.trim()) {
-            let _object = {...object};
+            let _object = formik.values;
             if (object.id) {
                 objectService.update(_object).then(data => {
                     toast.current.show({ severity: 'success', summary: 'Successful', detail: 'Alterado com sucesso', life: 3000 });
@@ -114,32 +137,30 @@ const User = () => {
       setObject(_object);
     };
 
-    const isValidCep = (rowData) => {
-      if(rowData.length === 8){
-        viaCepService.findZipCode(rowData).then(response => {
+    const isFormFieldValid = (name) => {
+      return !!(formik.errors[name] && formik.errors[name])
+    }
+    const getFormErrorMessage = (name) => {
+      return isFormFieldValid(name) && <small className='p-error'>{formik.errors[name]}</small>
+    }
 
-          if(response.status === 200 && !response.data.error) {
-            object.zipCode = response.data.cep
-            object.address = response.data.logradouro
-            setError(false)
-            return;
+    const isValidCep = (rowData) => {
+      const lengthInput = rowData.target.value
+       
+      if(lengthInput.length === 8){
+        viaCepService.findZipCode(lengthInput).then(response => {
+          if(response.status === 200 && !response.data.error) {      
+            formik.setFieldValue('zipCode', response.data.cep)
+            formik.setFieldValue('address', response.data.logradouro)
           }
         })
         .catch(error => {
-          console.error('CEP inválido ', error);
+          console.error('CEP inválido ', error)
         })
-      } 
-
-      object.address = '';
-      object.zipCode = '';
-      setError(true)
-    }
-
-    const comparePassword = (e) => {
-      if(e === object.address) {
-        return setPasswordValid(true);
+      } else {
+        formik.setFieldValue('zipCode', '')
+        formik.setFieldValue('address', '')
       }
-      return setPasswordValid(false);
     }
 
     const leftToolbarTemplate = () => {
@@ -187,15 +208,6 @@ const User = () => {
         </>
       );   
     }
-
-    // const passwordBodyTemplate = (rowData) => {
-    //   return (
-    //     <>
-    //       <span className="p-column-title">Nome</span>
-    //       {rowData.password}
-    //     </>
-    //   );   
-    // }
 
     const addressBodyTemplate = (rowData) => {
       return (
@@ -246,7 +258,7 @@ const User = () => {
     const objectDialogFooter = (
         <>
             <Button label="Cancelar" icon="pi pi-times" text onClick={hideDialog} />
-            <Button label="Salvar" icon="pi pi-check" text onClick={saveObject} />
+            <Button form='formUser' type='submit' label="Salvar" icon="pi pi-check"/>
         </>
     );
 
@@ -285,7 +297,6 @@ const User = () => {
                         <Column field="id" header="Id" sortable body={idBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
                         <Column field="name" header="Nome" sortable body={nameBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
                         <Column field="cpf" header="CPF" sortable body={cpfBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
-                        {/* <Column field="password" header="Senha" sortable body={passwordBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column> */}
                         <Column field="email" header="Email" sortable body={emailBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
                         <Column field="address" header="Endereço" sortable body={addressBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
                         <Column field="zipCode" header="CEP" sortable body={zipCodeBodyTemplate} headerStyle={{ minWidth: '1rem' }}></Column>
@@ -294,41 +305,30 @@ const User = () => {
                     </DataTable>
 
                     <Dialog visible={objectDialog} style={{ width: '450px' }} header="Detalhes do usuário" modal className="p-fluid" footer={objectDialogFooter} onHide={hideDialog}>
-                      <div className="field">
-                          <label htmlFor="name">Name</label>
-                          <InputText id="name" value={object.name} onChange={(e) => onInputChange(e, 'name')} required autoFocus className={classNames({ 'p-invalid': submitted && !object.name })} />
-                          {submitted && !object.name && <small className="p-invalid">*Nome é necessário</small>}
-                      </div>
-
-                      <div className="field">
-                          <label htmlFor="name">CPF</label>
-                          <InputMask value={object.cpf} onChange={(e) => onInputChange(e, 'cpf')} mask="999.999.999-99" placeholder="999.999.999-99" />
-                      </div>
-
-                      <div className="field">
-                          <label htmlFor="name">Senha</label>
-                          <Password value={object.password} onChange={(e) => onInputChange(e, 'password')} toggleMask required className={classNames({ 'p-invalid': submitted && !object.password && !passwordValid })} />
-                          {submitted && !object.password && <small className="p-invalid">*Campo obrigatório</small>}
-                      </div>
-
-                      <div className="field">
-                          <label htmlFor="name">Repita a senha</label>
-                          <Password onChange={(e) => comparePassword(e.target.value)} toggleMask required className={classNames({ 'p-invalid': submitted && !passwordValid && !object.password})}/>
-                          {submitted && !passwordValid && <small className="p-invalid">*Senhas diferentes</small>}
-                      </div>
-
-                      <div className='field'>
-                        <label htmlFor="name">Email</label>
-                        <InputText type='email' value={object.email} onChange={(e) => onInputChange(e, 'email')} />
-                      </div>
-                      <div className="field">
-                          <label htmlFor="name">CEP</label>
-                          <InputText id="zipCode" onChange={(e) => isValidCep(e.target.value)} mask="99999-999" placeholder="99999-999"/>                      
-                      </div>
-                      <div className="field">
-                          <label htmlFor="name">Endereço</label>
-                          <InputText id="address" value={object.address} onChange={(e) => onInputChange(e, 'address')} />                      
-                      </div>
+                      <form id='formUser' onSubmit={formik.handleSubmit}>
+                        <div className="field">
+                            <label htmlFor="name">Name</label>
+                            <InputText id="name" value={formik.values.name} onChange={formik.handleChange} autoFocus className={classNames({ 'p-invalid': isFormFieldValid('name')})} />
+                            {getFormErrorMessage('name')}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="cpf">CPF</label>
+                            <InputMask id="cpf" value={formik.values.cpf} onChange={formik.handleChange} mask="999.999.999-99" placeholder="999.999.999-99" />
+                        </div>
+                        <div className='field'>
+                          <label htmlFor="email">Email</label>
+                          <InputText id="email" value={formik.values.email} onChange={formik.handleChange} className={classNames({ 'p-invalid': isFormFieldValid('email')})} />
+                          {getFormErrorMessage('email')}
+                        </div>
+                        <div className="field">
+                            <label htmlFor="cep">CEP</label>
+                            <InputText id="zipCode" value={formik.values.zipCode} onChange={(e) => {isValidCep(e); formik.handleChange(e)}} mask="99999-999" placeholder="99999-999"/>
+                        </div>
+                        <div className="field">
+                            <label htmlFor="address">Endereço</label>
+                            <InputText id="address" value={formik.values.address} onChange={(e) => onInputChange(e, 'address')} />
+                        </div>
+                      </form>
                     </Dialog>
 
                     <Dialog visible={deleteObjectDialog} style={{ width: '450px' }} header="Confirm" modal footer={deleteObjectDialogFooter} onHide={objectDialogFooter}>
